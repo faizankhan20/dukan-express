@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dukan Express — کوٹری</title>
+<meta name="description" content="گھر بیٹھے آرڈر کریں — Kotri ki apni dukan. Fast grocery delivery in Kotri.">
+<meta name="theme-color" content="#C0392B">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#C0392B;--red2:#96281B;--dark:#111;--charcoal:#1e1e1e;--white:#fff;--gold:#F5A623;--radius:14px}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(0,0,0,0.45);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.nav-logo img{width:34px;height:34px;border-radius:8px}
+.nav-logo b{font-size:15px;font-weight:700;color:#fff;display:block;line-height:1.1}
+.nav-logo small{font-size:11px;color:rgba(255,255,255,0.4);font-family:'Noto Nastaliq Urdu',serif}
+.lang-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);padding:7px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-weight:600;transition:background 0.2s}
+.lang-btn:hover{background:rgba(255,255,255,0.2)}
+/* SLIDESHOW */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 60px;overflow:hidden}
+.slides{position:absolute;inset:0;z-index:0}
+.slide{position:absolute;inset:0;opacity:0;background-size:cover;background-position:center;transition:opacity 1.4s ease}
+.slide.active{opacity:1}
+.slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.65) 50%,rgba(0,0,0,0.93) 100%)}
+.caption{position:absolute;bottom:32px;left:0;right:0;z-index:2;text-align:center}
+.caption span{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.5px}
+.dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:10}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;padding:0;transition:all 0.3s}
+.dot.on{background:var(--red);width:18px;border-radius:3px}
+/* HERO CONTENT */
+.hero-c{position:relative;z-index:5}
+.badge{display:inline-flex;align-items:center;gap:7px;background:rgba(192,57,43,0.22);border:1px solid rgba(192,57,43,0.45);color:#ff9980;font-size:13px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:22px}
+.bdot{width:7px;height:7px;background:#ff4444;border-radius:50%;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.logo{width:100px;height:100px;border-radius:22px;margin:0 auto 22px;display:block;box-shadow:0 8px 40px rgba(192,57,43,0.45),0 2px 10px rgba(0,0,0,0.6);border:2px solid rgba(255,255,255,0.1)}
+h1{font-size:clamp(30px,8vw,52px);font-weight:800;line-height:1.1;margin-bottom:12px;letter-spacing:-0.5px}
+h1 .r{color:var(--red)}
+.utag{font-family:'Noto Nastaliq Urdu',Georgia,serif;font-size:clamp(19px,5vw,27px);color:rgba(255,255,255,0.88);margin-bottom:8px;direction:rtl;font-weight:600;line-height:1.7}
+.loc{display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:30px}
+.loc svg{width:13px;height:13px;fill:var(--red);flex-shrink:0}
+.btns{display:flex;flex-direction:column;gap:12px;align-items:center;width:100%}
+.bdl{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--red);color:#fff;padding:16px 36px;border-radius:50px;font-size:17px;font-weight:700;text-decoration:none;width:100%;max-width:320px;box-shadow:0 6px 28px rgba(192,57,43,0.55);transition:all 0.15s}
+.bdl:hover{background:var(--red2);transform:translateY(-1px)}
+.bdl:active{transform:scale(0.97)}
+.bwb{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.88);border:1px solid rgba(255,255,255,0.2);padding:15px 28px;border-radius:50px;font-size:15px;font-weight:600;text-decoration:none;width:100%;max-width:320px;transition:background 0.15s}
+.bwb:hover{background:rgba(255,255,255,0.18)}
+.tip{margin:22px auto 0;max-width:340px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;text-align:left}
+.tip p{font-size:12px;color:rgba(255,255,255,0.48);line-height:1.6}
+.tip strong{color:rgba(255,255,255,0.78)}
+/* SECTIONS */
+.sec{padding:60px 20px;background:#0f0f0f}
+.sec.lt{background:#141414}
+.slbl{font-size:11px;font-weight:700;color:var(--red);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:10px}
+.stitle{font-size:26px;font-weight:800;text-align:center;margin-bottom:6px}
+.surdu{font-family:'Noto Nastaliq Urdu',serif;font-size:18px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:36px;direction:rtl}
+.feats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:500px;margin:0 auto}
+.feat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px 16px;text-align:center}
+.fi{font-size:34px;margin-bottom:10px}
+.feat h3{font-size:15px;font-weight:700;margin-bottom:5px}
+.feat p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.5}
+.steps{max-width:440px;margin:0 auto}
+.step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.07)}
+.step:last-child{border:none}
+.sn{width:38px;height:38px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;margin-top:2px}
+.step h3{font-size:16px;font-weight:700;margin-bottom:3px}
+.step p{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.5}
+.step .us{font-family:'Noto Nastaliq Urdu',serif;font-size:13px;color:rgba(255,255,255,0.28);direction:rtl;margin-top:4px}
+/* CTA */
+.cta{background:var(--red);padding:60px 24px;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,0.2),transparent 60%)}
+.cta-i{position:relative;z-index:1}
+.cta h2{font-size:28px;font-weight:800;margin-bottom:6px}
+.cta .utag{color:rgba(255,255,255,0.72);font-size:18px;margin-bottom:28px}
+.cbtns{display:flex;flex-direction:column;gap:12px;align-items:center}
+.bw{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:#fff;color:var(--red);padding:16px 36px;border-radius:50px;font-size:16px;font-weight:800;text-decoration:none;width:100%;max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.25);transition:all 0.15s}
+.bw:hover{transform:translateY(-1px)}
+.bow{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.4);padding:14px 28px;border-radius:50px;font-size:15px;font-weight:600;text-decoration:none;width:100%;max-width:300px;transition:all 0.15s}
+.bow:hover{border-color:#fff;background:rgba(255,255,255,0.1)}
+/* FOOTER */
+footer{background:#080808;padding:36px 20px 90px;text-align:center}
+footer img{width:44px;border-radius:12px;margin-bottom:14px}
+.fn{font-size:16px;font-weight:700;margin-bottom:4px}
+.fu{font-family:'Noto Nastaliq Urdu',serif;font-size:14px;color:rgba(255,255,255,0.3);margin-bottom:16px;direction:rtl}
+footer p{font-size:12px;color:rgba(255,255,255,0.22);line-height:2}
+footer a{color:rgba(255,255,255,0.32);text-decoration:none}
+footer a:hover{color:var(--red)}
+/* WhatsApp */
+.wa{position:fixed;bottom:24px;right:18px;width:54px;height:54px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,0.35);text-decoration:none;z-index:300;transition:transform 0.15s}
+.wa:hover{transform:scale(1.08)}
+.wa svg{width:28px;height:28px;fill:#fff}
+/* PWA BANNER */
+#pwa-banner{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:#1c1c1e;border-top:1px solid rgba(255,255,255,0.1);padding:14px 18px 28px;box-shadow:0 -8px 30px rgba(0,0,0,0.5)}
+#pwa-banner.show{display:block}
+.pwa-i{max-width:440px;margin:0 auto;display:flex;gap:14px;align-items:center}
+.pwa-ic{width:48px;height:48px;border-radius:12px;flex-shrink:0}
+.pwa-t b{font-size:15px;font-weight:700;display:block;margin-bottom:2px}
+.pwa-t span{font-size:12px;color:rgba(255,255,255,0.45)}
+.pwa-bs{display:flex;gap:8px;margin-left:auto;flex-shrink:0}
+.pi-btn{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.pd-btn{background:transparent;color:rgba(255,255,255,0.35);border:none;padding:9px 12px;font-size:18px;cursor:pointer}
+/* iOS MODAL */
+#ios-m{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.78);align-items:flex-end;justify-content:center}
+#ios-m.show{display:flex}
+.ios-sh{background:#1c1c1e;border-radius:20px 20px 0 0;padding:24px 22px 44px;width:100%;max-width:480px}
+.ios-sh h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.ios-sh>p{font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:22px;line-height:1.55}
+.ios-steps{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.is{display:flex;gap:12px;align-items:flex-start}
+.isn{width:28px;height:28px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.is p{font-size:14px;color:rgba(255,255,255,0.82);line-height:1.5}
+.ios-cl{width:100%;background:rgba(255,255,255,0.1);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer}
+@media(min-width:480px){.btns,.cbtns{flex-direction:row;justify-content:center}.bdl,.bwb,.bw,.bow{width:auto}}
+@media(min-width:768px){.feats{grid-template-columns:repeat(4,1fr);max-width:700px}.logo{width:120px;height:120px;border-radius:28px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <img src="logo.png" alt="Dukan Express">
+    <div><b>Dukan Express</b><small>کوٹری</small></div>
+  </a>
+  <button class="lang-btn" onclick="tgl()" id="lb">اردو / EN</button>
+</nav>
+
+<section class="hero">
+  <div class="slides" id="sls">
+    <div class="slide active" style="background-image:url('kotri_bridge.jpg')">
+      <div class="caption"><span>کوٹری ریلوے پُل — Kotri Railway Bridge</span></div>
+    </div>
+    <div class="slide" style="background-image:url('kotri_junction.jpg')">
+      <div class="caption"><span>Kotri Junction — کوٹری جنکشن</span></div>
+    </div>
+    <div class="slide" style="background-image:url('kotri_chowk.jpg')">
+      <div class="caption"><span>کوٹری چوک — Kotri City Centre</span></div>
+    </div>
+    <div class="slide" style="background-image:url('kotri_hiran.jpg')">
+      <div class="caption"><span>ہرن چوک — Hiran Chowk Kotri</span></div>
+    </div>
+  </div>
+  <div class="dots" id="dts"></div>
+
+  <div class="hero-c">
+    <div class="badge"><span class="bdot"></span><span id="bt">Now Delivering in Kotri</span></div>
+    <img src="logo.png" alt="Dukan Express" class="logo">
+    <h1 id="h1">Your Local <span class="r">Dukan</span><br>at Your Door</h1>
+    <p class="utag" id="ut">گھر بیٹھے آرڈر کریں</p>
+    <div class="loc">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <span id="lt">Kotri, Sindh, Pakistan</span>
+    </div>
+    <div class="btns">
+      <a href="https://github.com/faizankhan20/dukan-express/releases/latest/download/dukan-express.apk" class="bdl" id="ab">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16l-4-4 1.5-1.5L11 12.5V4h2v8.5l1.5-1.5L16 12z"/><path d="M20 18H4"/></svg>
+        <span id="dt">Download Android App</span>
+      </a>
+      <a href="https://dukan-express.netlify.app/" target="_blank" class="bwb">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        <span id="wt">Open Web App</span>
+      </a>
+    </div>
+    <div class="tip">
+      <span style="font-size:20px;flex-shrink:0">💡</span>
+      <p id="tp"><strong>First time?</strong> After download tap <strong>Settings → Allow from this source</strong> then Install. One time only.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="slbl" id="fl">Why Dukan Express</p>
+  <h2 class="stitle" id="ftt">Everything you need</h2>
+  <p class="surdu">کوٹری کی اپنی دکان</p>
+  <div class="feats">
+    <div class="feat"><div class="fi">🛒</div><h3 id="f1h">Easy Orders</h3><p id="f1p">Browse by category, add to cart</p></div>
+    <div class="feat"><div class="fi">⚡</div><h3 id="f2h">Rush Delivery</h3><p id="f2p">Priority delivery when you need it fast</p></div>
+    <div class="feat"><div class="fi">💬</div><h3 id="f3h">Live Chat</h3><p id="f3p">Talk to us directly in the app</p></div>
+    <div class="feat"><div class="fi">📦</div><h3 id="f4h">Track Orders</h3><p id="f4p">Know exactly where your order is</p></div>
+  </div>
+</section>
+
+<section class="sec lt">
+  <p class="slbl" id="hl">Simple Steps</p>
+  <h2 class="stitle" id="htt">How it works</h2>
+  <p class="surdu">آرڈر کیسے کریں</p>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div><h3 id="s1h">Download the app</h3><p id="s1p">Tap Download and install on your Android phone.</p><p class="us">ڈاؤنلوڈ بٹن دبائیں اور انسٹال کریں</p></div></div>
+    <div class="step"><div class="sn">2</div><div><h3 id="s2h">Sign up in 30 seconds</h3><p id="s2p">Enter your mobile number and delivery address.</p><p class="us">نمبر اور پتہ درج کریں — صرف 30 سیکنڈ</p></div></div>
+    <div class="step"><div class="sn">3</div><div><h3 id="s3h">Browse &amp; add to cart</h3><p id="s3p">Groceries, soaps, household items and more.</p><p class="us">گروسری، صابن، گھریلو سامان اور بہت کچھ</p></div></div>
+    <div class="step"><div class="sn">4</div><div><h3 id="s4h">Place your order</h3><p id="s4p">Confirm and we deliver to your door in Kotri.</p><p class="us">آرڈر کنفرم کریں — کوٹری میں گھر تک ڈلیوری</p></div></div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="cta-i">
+    <h2 id="ch">Ready to order?</h2>
+    <p class="utag" id="cu">ابھی آرڈر کریں — کوٹری میں ڈلیوری</p>
+    <div class="cbtns">
+      <a href="https://github.com/faizankhan20/dukan-express/releases/latest/download/dukan-express.apk" class="bw">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16l-4-4 1.5-1.5L11 12.5V4h2v8.5l1.5-1.5L16 12z"/><path d="M20 18H4"/></svg>
+        <span id="cd">Download App</span>
+      </a>
+      <a href="https://dukan-express.netlify.app/" target="_blank" class="bow"><span id="cw">Open Web App</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="logo.png" alt="">
+  <div class="fn">Dukan Express</div>
+  <div class="fu">کوٹری، سندھ، پاکستان</div>
+  <p><a href="https://dukan-express.netlify.app/" target="_blank">dukan-express.netlify.app</a><br>&copy; 2025 Dukan Express — Kotri, Sindh</p>
+</footer>
+
+<a class="wa" id="wa" href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.477 2 2 6.477 2 12c0 1.79.467 3.471 1.285 4.934L2.05 21.95l5.13-1.235C8.6 21.558 10.272 22 12 22c5.523 0 10-4.477 10-10S17.521 2 11.998 2zm.002 18.25c-1.67 0-3.22-.453-4.548-1.24l-.326-.193-3.046.733.748-2.97-.213-.341A8.235 8.235 0 013.75 12c0-4.549 3.7-8.25 8.25-8.25S20.25 7.451 20.25 12s-3.701 8.25-8.25 8.25z"/></svg></a>
+
+<!-- PWA Banner (Android) -->
+<div id="pwa-banner">
+  <div class="pwa-i">
+    <img src="logo.png" class="pwa-ic" alt="">
+    <div class="pwa-t"><b id="pb">Install Dukan Express</b><span id="ps">Add to home screen — free</span></div>
+    <div class="pwa-bs">
+      <button class="pi-btn" id="pi">Install</button>
+      <button class="pd-btn" onclick="dpwa()">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- iOS Modal -->
+<div id="ios-m" onclick="clos(event)">
+  <div class="ios-sh">
+    <h3>Install Dukan Express 📱</h3>
+    <p>Add to your iPhone home screen — works exactly like an app, no App Store needed!</p>
+    <div class="ios-steps">
+      <div class="is"><div class="isn">1</div><p>Tap the <strong>Share button ⎋</strong> at the bottom of Safari</p></div>
+      <div class="is"><div class="isn">2</div><p>Scroll and tap <strong>"Add to Home Screen"</strong></p></div>
+      <div class="is"><div class="isn">3</div><p>Tap <strong>Add</strong> — icon appears on your home screen!</p></div>
+    </div>
+    <button class="ios-cl" onclick="clos()">Got it ✓</button>
+  </div>
+</div>
+
+<script>
+// SLIDESHOW
+let c=0,n=4,tm;
+const sl=document.querySelectorAll('.slide'),de=document.getElementById('dts');
+sl.forEach((_,i)=>{const d=document.createElement('button');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);de.appendChild(d);});
+function go(x){sl[c].classList.remove('active');de.children[c].classList.remove('on');c=x;sl[c].classList.add('active');de.children[c].classList.add('on');}
+function nx(){go((c+1)%n);}
+tm=setInterval(nx,4500);
+document.querySelector('.hero').addEventListener('touchstart',()=>clearInterval(tm),{passive:true});
+
+// LANGUAGE
+let ur=false;
+const T={
+  en:{bt:'Now Delivering in Kotri',h1:'Your Local <span class="r">Dukan</span><br>at Your Door',ut:'گھر بیٹھے آرڈر کریں',lt:'Kotri, Sindh, Pakistan',dt:'Download Android App',wt:'Open Web App',tp:'<strong>First time?</strong> After download tap <strong>Settings → Allow from this source</strong> then Install.',fl:'Why Dukan Express',ftt:'Everything you need',f1h:'Easy Orders',f1p:'Browse categories, add to cart',f2h:'Rush Delivery',f2p:'Priority when you need it fast',f3h:'Live Chat',f3p:'Talk to us directly',f4h:'Track Orders',f4p:'Know where your order is',hl:'Simple Steps',htt:'How it works',s1h:'Download the app',s1p:'Install on your Android phone.',s2h:'Sign up',s2p:'Number and address — 30 seconds.',s3h:'Browse & add to cart',s3p:'Groceries, soaps and more.',s4h:'Place your order',s4p:'We deliver to your door in Kotri.',ch:'Ready to order?',cu:'ابھی آرڈر کریں — کوٹری میں ڈلیوری',cd:'Download App',cw:'Open Web App',pb:'Install Dukan Express',ps:'Add to home screen — free'},
+  ur:{bt:'کوٹری میں ڈلیوری شروع ہے',h1:'<span class="r">دکان ایکسپریس</span><br>گھر کی دہلیز پر',ut:'گھر بیٹھے آرڈر کریں',lt:'کوٹری، سندھ، پاکستان',dt:'ایپ ڈاؤنلوڈ کریں',wt:'ویب ایپ کھولیں',tp:'<strong>پہلی بار؟</strong> ڈاؤنلوڈ کے بعد <strong>Settings → Allow from this source</strong> کریں پھر Install کریں',fl:'دکان ایکسپریس کیوں؟',ftt:'سب کچھ یہاں ملے گا',f1h:'آسان آرڈر',f1p:'کیٹگری سے چنیں، کارٹ میں ڈالیں',f2h:'جلدی ڈلیوری',f2p:'Rush آپشن سے فوری ڈلیوری',f3h:'لائیو چیٹ',f3p:'ایپ میں سیدھا بات کریں',f4h:'آرڈر ٹریک',f4p:'آرڈر کہاں ہے فوراً جانیں',hl:'آسان طریقہ',htt:'آرڈر کیسے کریں',s1h:'ایپ ڈاؤنلوڈ کریں',s1p:'ڈاؤنلوڈ بٹن دبائیں اور انسٹال کریں',s2h:'رجسٹر کریں',s2p:'نمبر اور پتہ درج کریں',s3h:'سامان چنیں',s3p:'گروسری، صابن، گھریلو سامان',s4h:'آرڈر کریں',s4p:'کوٹری میں گھر تک ڈلیوری',ch:'ابھی آرڈر کریں',cu:'کوٹری کی اپنی دکان',cd:'ایپ ڈاؤنلوڈ',cw:'ویب ایپ',pb:'دکان ایکسپریس انسٹال کریں',ps:'ہوم اسکرین پر شامل کریں'}
+};
+function tgl(){
+  ur=!ur;const L=ur?T.ur:T.en;
+  ['bt','ut','lt','dt','wt','fl','ftt','f1h','f1p','f2h','f2p','f3h','f3p','f4h','f4p','hl','htt','s1h','s1p','s2h','s2p','s3h','s3p','s4h','s4p','ch','cu','cd','cw','pb','ps'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.textContent=L[id];
+  });
+  document.getElementById('h1').innerHTML=L.h1;
+  document.getElementById('tp').innerHTML=L.tp;
+  document.getElementById('lb').textContent=ur?'EN / اردو':'اردو / EN';
+  document.documentElement.setAttribute('dir',ur?'rtl':'ltr');
+}
+
+// WHATSAPP (obfuscated)
+(function(){
+  const p=[92,303,309,2583].join('');
+  const m=encodeURIComponent('السلام علیکم! Dukan Express Kotri سے آرڈر کرنا ہے۔');
+  document.getElementById('wa').href='https://wa.me/'+p+'?text='+m;
+})();
+
+// PWA
+let dp=null;
+const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+const inSA=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();dp=e;
+  if(!sessionStorage.getItem('pwa-d'))setTimeout(()=>document.getElementById('pwa-banner').classList.add('show'),2500);
+});
+document.getElementById('pi').addEventListener('click',async()=>{
+  if(!dp)return;dp.prompt();
+  const{outcome}=await dp.userChoice;
+  if(outcome==='accepted')dpwa();dp=null;
+});
+function dpwa(){document.getElementById('pwa-banner').classList.remove('show');sessionStorage.setItem('pwa-d','1');}
+
+// iOS prompt
+if(isIos&&!inSA&&!sessionStorage.getItem('ios-d')){
+  setTimeout(()=>document.getElementById('ios-m').classList.add('show'),3500);
+}
+function clos(e){
+  if(!e||e.target===document.getElementById('ios-m')){
+    document.getElementById('ios-m').classList.remove('show');
+    sessionStorage.setItem('ios-d','1');
+  }
+}
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
