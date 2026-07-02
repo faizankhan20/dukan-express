@@ -6,6 +6,12 @@
 <title>Dukan Express — کوٹری</title>
 <meta name="description" content="گھر بیٹھے آرڈر کریں — Kotri ki apni dukan. Fast grocery delivery in Kotri.">
 <meta name="theme-color" content="#C0392B">
+<!-- iOS: makes the installed icon open full-screen like a real app (no Safari bars) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dukan Express">
+<!-- Android/Chrome: same "standalone" hint -->
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="site.webmanifest">
 <link rel="icon" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
@@ -107,8 +113,8 @@ footer a:hover{color:var(--red)}
 .pi-btn{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
 .pd-btn{background:transparent;color:rgba(255,255,255,0.35);border:none;padding:9px 12px;font-size:18px;cursor:pointer}
 /* iOS MODAL */
-#ios-m{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.78);align-items:flex-end;justify-content:center}
-#ios-m.show{display:flex}
+#ios-m,#inapp-m{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.78);align-items:flex-end;justify-content:center}
+#ios-m.show,#inapp-m.show{display:flex}
 .ios-sh{background:#1c1c1e;border-radius:20px 20px 0 0;padding:24px 22px 44px;width:100%;max-width:480px}
 .ios-sh h3{font-size:18px;font-weight:700;margin-bottom:8px}
 .ios-sh>p{font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:22px;line-height:1.55}
@@ -228,6 +234,20 @@ footer a:hover{color:var(--red)}
 
 <a class="wa" id="wa" href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2C6.477 2 2 6.477 2 12c0 1.79.467 3.471 1.285 4.934L2.05 21.95l5.13-1.235C8.6 21.558 10.272 22 12 22c5.523 0 10-4.477 10-10S17.521 2 11.998 2zm.002 18.25c-1.67 0-3.22-.453-4.548-1.24l-.326-.193-3.046.733.748-2.97-.213-.341A8.235 8.235 0 013.75 12c0-4.549 3.7-8.25 8.25-8.25S20.25 7.451 20.25 12s-3.701 8.25-8.25 8.25z"/></svg></a>
 
+<!-- In-App Browser Warning (Facebook/Instagram/TikTok in-app browsers block installs) -->
+<div id="inapp-m" onclick="if(!arguments[0]||arguments[0].target===this){closInapp()}">
+  <div class="ios-sh">
+    <h3>Open in your real browser 🌐</h3>
+    <p id="inapp-p">You opened this link inside the app. This in-app browser blocks one-tap install. Please open this page in Chrome or Safari to install.</p>
+    <div class="ios-steps">
+      <div class="is"><div class="isn">1</div><p>Tap the <strong>⋮ / •••</strong> menu at the top-right (or bottom) of this screen</p></div>
+      <div class="is"><div class="isn">2</div><p>Choose <strong>"Open in Browser"</strong> / <strong>"Open in Chrome"</strong> / <strong>"Open in Safari"</strong></p></div>
+      <div class="is"><div class="isn">3</div><p>Once it opens there, tap <strong>Install Now</strong> again</p></div>
+    </div>
+    <button class="ios-cl" onclick="closInapp()">Got it ✓</button>
+  </div>
+</div>
+
 <!-- Toast notification -->
 <div id="install-toast">✅ App installed! Opening...</div>
 
@@ -297,20 +317,52 @@ let autoInstallAttempted = false;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
 
-// ✅ Check if user came from Facebook/Ad
+// ✅ Detect Facebook / Instagram / TikTok / YouTube / Google in-app browsers.
+// IMPORTANT: these in-app WebViews do NOT support beforeinstallprompt (Android)
+// and do NOT support "Add to Home Screen" the same way Safari does (iOS).
+// Auto-install is IMPOSSIBLE inside them — the only fix is telling the user
+// to tap "Open in Browser" so the page loads in real Chrome/Safari.
+function isInAppBrowser() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+  return /FBAN|FBAV|FB_IAB|Instagram|Messenger|Line\/|TikTok|musical_ly|BytedanceWebview|Snapchat|Pinterest|WhatsApp/i.test(ua)
+      || (/YouTube/i.test(ua))
+      || (/\bwv\b/.test(ua) && /Version\/[\d.]+/.test(ua)); // generic Android WebView signature
+}
+
+// ✅ Check if user came from Facebook/Instagram/TikTok/YouTube/Google ads
 function isFromAd() {
   const params = new URLSearchParams(window.location.search);
-  return !!(params.get('fbclid') || 
-            params.get('utm_source') === 'facebook' || 
-            params.get('utm_medium') === 'cpc' || 
-            params.get('ref') === 'ad' ||
-            params.get('utm_campaign') === 'facebook');
+  const source = (params.get('utm_source') || '').toLowerCase();
+  const medium = (params.get('utm_medium') || '').toLowerCase();
+  return !!(
+    params.get('fbclid') ||              // Facebook / Instagram
+    params.get('igshid') ||              // Instagram
+    params.get('ttclid') ||              // TikTok
+    params.get('gclid') ||               // Google / YouTube ads
+    params.get('gbraid') || params.get('wbraid') || // Google App campaigns
+    params.get('ref') === 'ad' ||
+    ['facebook','fb','instagram','ig','tiktok','youtube','yt','google'].includes(source) ||
+    ['cpc','paid','paidsocial','ppc'].includes(medium) ||
+    isInAppBrowser()
+  );
 }
 
 // ✅ Handle Install Now button click
 function handleInstallNow(event) {
   event.preventDefault();
+  // If we're trapped inside FB/IG/TikTok/YouTube's in-app browser, no install
+  // API is available at all — tell the user how to escape to a real browser
+  // instead of silently doing nothing.
+  if (isInAppBrowser() && !isStandalone) {
+    document.getElementById('inapp-m').classList.add('show');
+    return;
+  }
   installWebApp();
+}
+
+function closInapp() {
+  document.getElementById('inapp-m').classList.remove('show');
+  sessionStorage.setItem('inapp-d', '1');
 }
 
 // ✅ Main install function
@@ -335,17 +387,25 @@ async function installWebApp() {
         document.getElementById('pwa-banner').classList.remove('show');
         sessionStorage.setItem('pwa-d', '1');
         updateInstallButtons();
-        showToast('✅ App installed! Opening...');
-        setTimeout(() => { window.location.href = 'https://dukan-express.netlify.app/'; }, 1200);
+        // NOTE: we can't truly "launch" the newly-installed standalone app
+        // from here — the browser only lets the user open it from the
+        // home-screen icon it just created. Redirecting the current tab
+        // is NOT the same as opening the installed app, so we say so.
+        showToast('✅ Installed! Open it from your home screen');
       } else {
         showToast('❌ Installation cancelled');
       }
       deferredPrompt = null;
     } catch (err) {
       console.log('Install error:', err);
+      showToast('⚠️ Could not install — opening web app instead');
+      setTimeout(() => { window.location.href = 'https://dukan-express.netlify.app/'; }, 1000);
     }
   } else {
-    // If no prompt, redirect to web app
+    // No install prompt available. Common reasons: already installed,
+    // browser hasn't decided the site is "installable" yet, user dismissed
+    // it 3+ times (Chrome mutes it for a while), or this is a desktop
+    // browser that doesn't support the mini-infobar. Fall back to the web app.
     showToast('🌐 Opening web app...');
     setTimeout(() => { window.location.href = 'https://dukan-express.netlify.app/'; }, 800);
   }
@@ -367,21 +427,28 @@ function updateInstallButtons() {
   });
 }
 
-// ✅ AUTO-INSTALL for Facebook Ads - NO TAP REQUIRED!
+// ✅ AUTO-INSTALL for Facebook/Instagram/TikTok/YouTube Ads
+// LIMITATION (browser policy, can't be coded around): this event only
+// fires in real Chrome/Edge/Samsung Internet, only when the PWA install
+// criteria (manifest + service worker + icons) are already met, and Google's
+// own guidance says NOT to call .prompt() without a user gesture — Chrome
+// may silently ignore or auto-dismiss it otherwise. It NEVER fires at all
+// inside Facebook/Instagram/TikTok's in-app browser or on iOS Safari.
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  
+  window.__biprFired = true;
+
   // Show banner for normal users
   if (!sessionStorage.getItem('pwa-d') && !isStandalone) {
     setTimeout(() => document.getElementById('pwa-banner').classList.add('show'), 2500);
   }
   
-  // ⭐ AUTO-TRIGGER INSTALL for Facebook/Ad traffic
-  if (isFromAd() && !autoInstallAttempted && !sessionStorage.getItem('auto-installed')) {
+  // ⭐ AUTO-TRIGGER INSTALL for Facebook/Instagram/TikTok/YouTube ad traffic
+  if (isFromAd() && !isInAppBrowser() && !autoInstallAttempted && !sessionStorage.getItem('auto-installed')) {
     autoInstallAttempted = true;
     sessionStorage.setItem('auto-installed', '1');
-    console.log('🔴 AUTO-INSTALL triggered from Facebook/Ad');
+    console.log('🔴 AUTO-INSTALL triggered from ad traffic');
     
     // Small delay to ensure page is ready
     setTimeout(async () => {
@@ -394,10 +461,14 @@ window.addEventListener('beforeinstallprompt', (e) => {
             document.getElementById('pwa-banner').classList.remove('show');
             sessionStorage.setItem('pwa-d', '1');
             updateInstallButtons();
-            showToast('✅ App installed! Opening...');
-            setTimeout(() => { window.location.href = 'https://dukan-express.netlify.app/'; }, 1200);
+            showToast('✅ Installed! Open it from your home screen');
           } else {
             console.log('❌ Auto-install dismissed');
+            // Chrome dismissed/blocked the silent prompt — fall back to
+            // showing the normal banner so the user can tap it themselves.
+            if (!sessionStorage.getItem('pwa-d')) {
+              document.getElementById('pwa-banner').classList.add('show');
+            }
           }
           deferredPrompt = null;
         }
@@ -409,13 +480,30 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 // ✅ Event listeners
+// NOTE: .bdl and .bw already have inline onclick="handleInstallNow(event)" in
+// the HTML. This block used to ALSO bind installWebApp() directly to those
+// same buttons — meaning every tap fired the install flow TWICE and skipped
+// the in-app-browser check entirely. Fixed: only bind the banner's button here.
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.bdl')?.addEventListener('click', (e) => { e.preventDefault(); installWebApp(); });
-  document.querySelector('.bw')?.addEventListener('click', (e) => { e.preventDefault(); installWebApp(); });
-  document.getElementById('pi').addEventListener('click', () => installWebApp());
-  
+  document.getElementById('pi')?.addEventListener('click', () => {
+    if (isInAppBrowser() && !isStandalone) {
+      document.getElementById('inapp-m').classList.add('show');
+      return;
+    }
+    installWebApp();
+  });
+
   if (isStandalone) {
     updateInstallButtons();
+  }
+
+  // Ad traffic that never gets a beforeinstallprompt (in-app browsers, or
+  // Chrome simply hasn't fired it yet) would otherwise sit on a dead button.
+  // Proactively tell them how to escape to a real browser.
+  if (isFromAd() && isInAppBrowser() && !isStandalone && !sessionStorage.getItem('inapp-d')) {
+    setTimeout(() => {
+      document.getElementById('inapp-m').classList.add('show');
+    }, 2000);
   }
 });
 
@@ -424,8 +512,7 @@ window.addEventListener('appinstalled', () => {
   document.getElementById('pwa-banner').classList.remove('show');
   sessionStorage.setItem('pwa-d', '1');
   updateInstallButtons();
-  showToast('✅ App installed! Opening...');
-  setTimeout(() => { window.location.href = 'https://dukan-express.netlify.app/'; }, 1000);
+  showToast('✅ Installed! Open it from your home screen');
 });
 
 function dpwa() { 
